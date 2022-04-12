@@ -17,3 +17,10 @@
 .header a:hover{
     color: orange;
 }
+
+.btn{
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 17px;
+    margin-left: 36px;
+}
