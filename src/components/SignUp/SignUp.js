@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCreateUserWithEmailAndPassword,useSendEmailVerification } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, } from 'react-firebase-hooks/auth';
 import app from '../../firebase.init';
 import {getAuth}from 'firebase/auth'
 const auth=getAuth(app)
 
 const SignUp = () => {
    
-    const [createUserWithEmailAndPassword,user]=useCreateUserWithEmailAndPassword(auth)
+    const [createUserWithEmailAndPassword,user]=useCreateUserWithEmailAndPassword(auth,{sendEmailVerification:true})
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
     const [confirmPassword,setConfirmPassword]=useState('');

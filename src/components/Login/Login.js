@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
+  import 'react-toastify/dist/ReactToastify.css';
 import './Login.css'
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import app from '../../firebase.init';
 import {getAuth}from 'firebase/auth'
-const auth=getAuth(app)
+const auth=getAuth(app);
 
 
 const Login = () => {
+    const [agree,setAgree]=useState(false)
     const location=useLocation();
    
     const from=location?.state?.from?.pathname || "/"
@@ -22,14 +26,29 @@ const Login = () => {
     const [password,setPassword]=useState('')
 
     const handleLogin=e=>{
-        e.preventDefault()
-        signInWithEmailAndPassword(email,password).then(()=> navigate(from,{replace:true}))
+      
+            e.preventDefault()
+            signInWithEmailAndPassword(email,password)
+        
+      
 
     }
-    if(user){
-       
-    }
+    console.log(user)
+if(user){
+    navigate(from,{replace:true})
+}
+    const [sendPasswordResetEmail, sending, error2] = useSendPasswordResetEmail(
+        auth
+      );
 
+
+      const handleResetPassword=()=>{
+          if(email){
+            sendPasswordResetEmail(email)
+            toast('please check your email')
+          }
+      }
+console.log(agree)
     return (
         <div className='w-full'>
 
@@ -41,7 +60,9 @@ const Login = () => {
                     <p className="text-center">{error?.message}</p>
                <input onBlur={e=>setPassword(e.target.value)} className='border-2 my-4 p-2 border-blue-600 rounded-md w-3/4 outline-none focus:border-green-700' placeholder='Enter Your Password' type="password" required name="" id="" />
               {loading && <p>loading....</p>} 
-               <input className='bg-yellow-200 my-4 focus:bg-yellow-700 font-semibold p-2 rounded-md w-3/4 cursor-pointer' type="submit" value="Log in" />
+            <p  className='flex items-center '>  <input onClick={()=>setAgree(!agree)} type="checkbox" name="" id="" /> <span className={`font-bold ${agree ? 'text-blue-700': 'text-red-700'}`}> agree with terms and condition</span></p>
+            <button onClick={ handleResetPassword} className='text-blue-600'>forgot password</button>
+               <input disabled={!agree} className='bg-yellow-200 my-4 focus:bg-yellow-700 font-semibold p-2 rounded-md w-3/4 cursor-pointer' type="submit" value="Log in" />
                </form>
                <p className='text-center py-2'>Not Sign Up please <Link className='text-blue-600' to='/signup'>sign up</Link></p>
                <div className='flex justify-center items-center'>
@@ -57,6 +78,7 @@ const Login = () => {
              
               
             </div>
+            <ToastContainer></ToastContainer>
 
         </div>
     );
